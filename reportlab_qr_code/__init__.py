@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import List, Union, Tuple
 
 import qrcode
+from reportlab.lib.colors import Color
 from reportlab.lib.units import toLength
 from reportlab.pdfgen.canvas import FILL_EVEN_ODD, Canvas
 
@@ -603,6 +604,12 @@ def parse_color(params, color_name):
 	color = params.get(color_name)
 	if color is None:
 		return
+
+	if isinstance(color, Color):
+		params[color_name] = color
+		params[f'{color_name}_alpha'] = color.alpha
+		return
+
 	alpha = 1.0
 	if re.match(r'^#[0-9a-f]{8}$', color.lower()):
 		color = color.lower()
